@@ -28,7 +28,7 @@ def formato_metrica(valor, prefijo = ''):
 
 # Se abre la base de datos 
 df= pd.read_csv('https://raw.githubusercontent.com/NestorSaenz/sales_store_streamlit/main/df_final.csv')
-
+                 
 # antes de github agregar raw. y despues de github agregar usercontent, blob se borra
 
 
