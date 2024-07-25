@@ -33,7 +33,8 @@ df= pd.read_csv('https://raw.githubusercontent.com/NestorSaenz/sales_store_strea
 
 
 # Configuración de los filtros, se asigna un espacio a la izquierda para los filtros, y se agrega el logo
-st.sidebar.image('D:/bootcamp_experience/visualizacion/logo_sin_fonfo.png')
+#st.sidebar.image('D:/bootcamp_experience/visualizacion/logo_sin_fonfo.png')
+st.sidebar.image('https://raw.githubusercontent.com/NestorSaenz/sales_store_streamlit/main/logo_sin_fonfo.png')
 st.sidebar.title('Filtros')
 
 # Filtro de las ciudades
