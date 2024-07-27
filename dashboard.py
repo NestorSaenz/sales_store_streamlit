@@ -1,3 +1,6 @@
+import joblib
+from tensorflow.keras.models import load_model
+from tensorflow.keras.losses import MeanSquaredError
 import streamlit as st
 import pandas as pd
 import grafico_mapa as graf1 # type: ignore
@@ -89,3 +92,80 @@ with col2:
 #st.dataframe(df)
 
 # Color gris rgb(37 40 47)
+
+#Carga del modelo ML
+
+# Cargar el modelo y los scalers
+loss_fn = MeanSquaredError()
+model = load_model('model_new.h5', custom_objects={'mse': loss_fn})
+scaler_X = joblib.load('scaler_X.pkl')
+scaler_y = joblib.load('scaler_y.pkl')
+# Cargar y preprocesar datos
+@st.cache_data
+def load_data():
+    df = pd.read_csv('https://raw.githubusercontent.com/NestorSaenz/sales_store_streamlit/main/df_final.csv')
+    df['fecha_compra'] = pd.to_datetime(df['fecha_compra'])
+    df = df[df['anio'] != 2021]
+    df = df.loc[:, ['cantidad', 'valor_unitario', 'anio', 'fecha_compra', 'tipo_producto', 'marca', 'estacion', 'ingreso_neto']]
+    df = df.groupby(['anio', 'tipo_producto', 'estacion', 'fecha_compra'])['ingreso_neto'].sum().reset_index()
+    df['tipo_producto_encoded'] = df['tipo_producto'].astype('category').cat.codes
+    df['estacion_encoded'] = df['estacion'].astype('category').cat.codes
+    return df
+
+df = load_data()
+
+# Streamlit app
+# Titulo
+st.markdown(
+    """
+        <h1 style='color:#cfae48; text-align: center; margin-top: 40px; margin-bottom: 40px;'>
+        Predicción de Ingreso Neto 💰
+    </h1>
+    """, 
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <style>
+    .stSelectbox div[data-baseweb="select"] {
+        font-size: 18px; /* Tamaño de la opción seleccionada */
+    }
+    .etiqueta-selectbox {  /* Clase para las etiquetas */
+        font-size: 20px;  /* Tamaño de la etiqueta */
+        color: red;       /* Color de la etiqueta (puedes cambiarlo) */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+
+# Selección de año
+anio = st.selectbox('Selecciona el año', ['2021', '2022'])
+
+# Selección de tipo de producto
+tipo_producto = st.selectbox('Selecciona el tipo de producto', df['tipo_producto'].unique())
+
+# Selección de estación
+estacion = st.selectbox('Selecciona la estación', df['estacion'].unique())
+
+# Convertir selecciones a formato adecuado
+tipo_producto_encoded = df['tipo_producto_encoded'][df['tipo_producto'] == tipo_producto].values[0]
+estacion_encoded = df['estacion_encoded'][df['estacion'] == estacion].values[0]
+
+# Realizar la predicción
+if st.button('Predecir'):
+    nuevos_datos = pd.DataFrame({
+        'anio': [anio],
+        'tipo_producto_encoded': [tipo_producto_encoded],
+        'estacion_encoded': [estacion_encoded]
+    })
+
+    nuevos_datos_scaled = scaler_X.transform(nuevos_datos)
+    prediccion_scaled = model.predict(nuevos_datos_scaled)
+    prediccion = scaler_y.inverse_transform(prediccion_scaled)
+    
+    st.write(f'<span style="font-size:24px;">Predicción de Ingreso Neto : ${int(prediccion[0][0])/1000} k 💸</span>', unsafe_allow_html=True)
+    
