@@ -100,7 +100,7 @@ loss_fn = MeanSquaredError()
 model = load_model('model_new.h5', custom_objects={'mse': loss_fn})
 scaler_X = joblib.load('scaler_X.pkl')
 scaler_y = joblib.load('scaler_y.pkl')
-
+df = df.groupby(['anio', 'tipo_producto', 'estacion', 'fecha_compra'])['ingreso_neto'].sum().reset_index()
 df['tipo_producto_encoded'] = df['tipo_producto'].astype('category').cat.codes
 df['estacion_encoded'] = df['estacion'].astype('category').cat.codes
 
