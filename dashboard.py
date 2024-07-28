@@ -116,7 +116,8 @@ def load_data():
 
 
 df = load_data()
-
+st.write("DataFrame completo:")
+st.dataframe(df)
 # Streamlit app
 # Titulo
 st.markdown(
