@@ -100,12 +100,22 @@ loss_fn = MeanSquaredError()
 model = load_model('model_new.h5', custom_objects={'mse': loss_fn})
 scaler_X = joblib.load('scaler_X.pkl')
 scaler_y = joblib.load('scaler_y.pkl')
-df = df.groupby(['anio', 'tipo_producto', 'estacion', 'fecha_compra'])['ingreso_neto'].sum().reset_index()
-df['tipo_producto_encoded'] = df['tipo_producto'].astype('category').cat.codes
-df['estacion_encoded'] = df['estacion'].astype('category').cat.codes
+
+# Cargar y preprocesar datos
+@st.cache_data
+def load_data():
+    df = pd.read_csv('https://raw.githubusercontent.com/NestorSaenz/sales_store_streamlit/main/df_final.csv')
+    df['fecha_compra'] = pd.to_datetime(df['fecha_compra'])
+    df = df[df['anio'] != 2021]
+    df = df.loc[:, ['cantidad', 'valor_unitario', 'anio', 'fecha_compra', 'tipo_producto', 'marca', 'estacion', 'ingreso_neto']]
+    df = df.groupby(['anio', 'tipo_producto', 'estacion', 'fecha_compra'])['ingreso_neto'].sum().reset_index()
+    df['tipo_producto_encoded'] = df['tipo_producto'].astype('category').cat.codes
+    df['estacion_encoded'] = df['estacion'].astype('category').cat.codes
+    return df
+    
 
 
-# df = load_data()
+df = load_data()
 
 # Streamlit app
 # Titulo
