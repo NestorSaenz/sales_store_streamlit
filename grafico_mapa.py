@@ -41,8 +41,19 @@ def crear_grafico(df):
             'size': 22
         }
     }
+    
     )
     
  
+    fig.update_layout(
+        geo=dict(
+            bgcolor='rgba(0,0,0,0)',  # Fondo transparente
+            showland=True, landcolor="LightGray",
+            showocean=True, oceancolor="Gray",
+            showlakes=True, lakecolor="Blue",
+            
+        ),
+        margin={"r":0,"t":70,"l":0,"b":0}  # Eliminar márgenes
+    )
     return fig
 

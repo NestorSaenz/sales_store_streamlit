@@ -16,7 +16,8 @@ def crear_grafico(df):
                   range_y = (0, df.max()),
                   color = 'anio',
                   line_dash = 'anio',
-                  labels={'anio': 'Año'}
+                  labels={'anio': 'Año'},
+                  markers=True
                   )
     fig.update_layout(yaxis_title = 'Ingresos ($)')
     fig.update_layout(xaxis_title = 'Mes')
@@ -34,6 +35,6 @@ def crear_grafico(df):
         }
     }
     )
-    
+
     
     return fig

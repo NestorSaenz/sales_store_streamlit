@@ -171,3 +171,4 @@ if st.button('Predecir'):
     
     st.write(f'<span style="font-size:24px;">Predicción de Ingreso Neto : ${int(prediccion[0][0])/1000} k 💸</span>', unsafe_allow_html=True)
     
+    
