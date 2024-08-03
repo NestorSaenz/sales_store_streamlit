@@ -92,7 +92,7 @@ with tab1:
 
 with tab2:
     #Carga del modelo ML
-
+    st.sidebar.empty()
     # Cargar el modelo y los scalers
     loss_fn = MeanSquaredError()
     model = load_model('model_new.h5', custom_objects={'mse': loss_fn})
