@@ -9,6 +9,7 @@ def crear_grafico(df):
                  x = 'ingreso_neto',
                  y = 'producto',
                  text = 'ingreso_neto',
+                 color_discrete_sequence=['#0077B6']
               )
     
     fig.update_layout(yaxis_title = 'Productos', 
@@ -28,9 +29,7 @@ def crear_grafico(df):
     
     fig.update_traces(texttemplate = '%{text:.3s}',
                       textfont=dict(color="white"),
-                      #textposition='outside',
-                      marker_color='#003f5c'
-                      
+                      #textposition='outside', 
                       )
 
     return fig
